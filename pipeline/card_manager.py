@@ -76,6 +76,3 @@ def collect_cards(zh_struct):
     # assemble cards from selected files
     cards = create_cards(zh_struct, selected_notes)
     return cards
-
-def output_cards(output_loc):
-    create_anki_package(output_loc)
