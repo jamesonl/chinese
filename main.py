@@ -11,7 +11,7 @@ cards = collect_cards(zh_struct)
 print("TOTAL CARDS: ", len(cards))
 
 # for demo purposes
-print(len(cards))
+# print(len(cards))
 
 # get some analytics on the state of the cards I have created
 unique_lessons = set([x.lesson for x in cards])

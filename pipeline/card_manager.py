@@ -31,8 +31,6 @@ def parse_notes(text, attr_sect, vocab_sect, note_type = 'zh'):
             if (vf > 1) & (len(lls) > 0):
                 content.append(lls)
 
-            print(af, vf, len(lls), lls)
-
     # Clean up the content so that it is returned nicely
     # eliminates any duplicates
     clean_content = list(set(content))
@@ -41,7 +39,6 @@ def parse_notes(text, attr_sect, vocab_sect, note_type = 'zh'):
     attr_kv = [(key.split(":")[0], key.split(":")[1]) for key in attributes]
     clean_attr = dict(zip([x[0] for x in attr_kv], [x[1] for x in attr_kv]))
 
-    print(clean_content)
     return clean_attr, clean_content
 
 # captures the card class, and assembles information into an anki format
@@ -62,7 +59,6 @@ def create_cards(struct, notes, lang_type = 'zh'):
         attr = assembled_text[0]
         words = assembled_text[1]
         cards = [ChineseCard(attr, word) for word in words]
-        print(len(cards))
         all_cards.append(cards)
 
     # flatten the lists since the cards carry all the necessary reference info
@@ -75,7 +71,7 @@ def collect_cards(zh_struct):
 
     # Collect a specific set of files to scrape vocab from
     selected_notes = select_notes(zh_notes, '^[cp]+')
-    print("reviewing for: ", " ".join(selected_notes))
+    # print("reviewing for: ", " ".join(selected_notes))
 
     # assemble cards from selected files
     cards = create_cards(zh_struct, selected_notes)
