@@ -1,6 +1,7 @@
 # Attributes
 title: Coffee Break Series
-lesson: Airport Pick Up #2
+series number: 2
+lesson: Meeting New Colleagues
 date: May 16, 2020
 
 # Vocabulary

@@ -20,7 +20,7 @@ def parse_notes(text, attr_sect, vocab_sect, note_type = 'zh'):
         af = 0
         vf = 0
 
-        for line in text:
+        for line in text[0:len(text)-1]:
             lls = line
             af = af + 1 if (lls == attr_sect) | (af > 0) else af
             vf = vf + 1 if (lls == vocab_sect) | (vf > 0) else vf
@@ -28,8 +28,10 @@ def parse_notes(text, attr_sect, vocab_sect, note_type = 'zh'):
             if (af > 1) & (vf == 0) & (len(lls) > 0):
                 attributes.append(line)
 
-            if (vf > 1) & (len(line)) > 0:
+            if (vf > 1) & (len(lls) > 0):
                 content.append(lls)
+
+            print(af, vf, len(lls), lls)
 
     # Clean up the content so that it is returned nicely
     # eliminates any duplicates
@@ -39,6 +41,7 @@ def parse_notes(text, attr_sect, vocab_sect, note_type = 'zh'):
     attr_kv = [(key.split(":")[0], key.split(":")[1]) for key in attributes]
     clean_attr = dict(zip([x[0] for x in attr_kv], [x[1] for x in attr_kv]))
 
+    print(clean_content)
     return clean_attr, clean_content
 
 # captures the card class, and assembles information into an anki format
@@ -56,11 +59,11 @@ def create_cards(struct, notes, lang_type = 'zh'):
                                      vocab_sect = '# Vocabulary')
 
         # embed the class structure
-        if lang_type == 'zh':
-            attr = assembled_text[0]
-            words = assembled_text[1]
-            cards = [ChineseCard(attr, word) for word in words]
-            all_cards.append(cards)
+        attr = assembled_text[0]
+        words = assembled_text[1]
+        cards = [ChineseCard(attr, word) for word in words]
+        print(len(cards))
+        all_cards.append(cards)
 
     # flatten the lists since the cards carry all the necessary reference info
     flat_cards = [y for x in all_cards for y in x]
@@ -72,6 +75,7 @@ def collect_cards(zh_struct):
 
     # Collect a specific set of files to scrape vocab from
     selected_notes = select_notes(zh_notes, '^[cp]+')
+    print("reviewing for: ", " ".join(selected_notes))
 
     # assemble cards from selected files
     cards = create_cards(zh_struct, selected_notes)

@@ -2,6 +2,8 @@ import os
 import random
 import genanki
 import uuid
+from .anki.model import anki_model
+from .anki.deckid import deck_id_list, model_ids
 
 # I am working through trying to understand how to properly upload cards
 # to a package. There are a few bugs that have emerged from this process:
@@ -11,53 +13,33 @@ import uuid
 # - I need to persist model information somewhere
 # - I potentially need to persist card ID information somewhere
 
-def create_anki_package(output, cards, deck_name, ):
-    # using UUID.UUID1 to generate random card #s
+def create_anki_package(output, cards, deck_name):
 
-    id_list = []
-    for i in range(len(cards)):
-        id_val = int(str(uuid.uuid1().int)[0:10])
-        id_list.append(id_val)
+    # Assign cards to an existing deck name, otherwise
+    # generate a new id and persist this into the model
+    # dictionary
+    if deck_name in deck_id_list:
+        pass
+    else:
+        # TODO: add a new dictionary value with a key
+        pass
 
-    model = genanki.Model(
-      id_list[-1],
-      'Simple Model',
-      fields=[
-        {'name': 'Meaning'},
-        {'name': 'Pinyin'},
-        {'name': 'Definition'},
-        {'name': 'Tags'}
-      ],
-      templates=[
-          {
-            'name': 'Only Card', \
-              'qfmt': '<center>Define the Following:<div style="font-family: Arial; font-size: \
-                      40px; padding: 20px;">{{Meaning}}</div></center>', \
-              'afmt': '<center>{{FrontSide}}<hr id=answer><div style="font-family: Arial; \
-                      font-size: 20px; padding: 20px;">{{Pinyin}}</div><div \
-                      style="font-family: Arial; font-size: 20px; padding: 20px;"> \
-                      <em>{{Definition}}</em></div></center>', \
-          },
-      ])
+    deck_id = deck_id_list[deck_name]
 
-    # I have no idea what this does
-    del id_list[-1]
-
-    #
     my_deck = genanki.Deck(
-      id_list[-1],
-      'mandarin')
+      deck_id,
+      deck_name)
 
-    i = 0
+    model_id = model_ids[deck_name]
+    model = anki_model(model_id)
 
     for word in cards:
         note = genanki.Note(
-            # sort_field=id_list[i],
+            sort_field=1,
             model=model,
             fields=[word.word, word.pinyin, word.definition]
         )
         my_deck.add_note(note)
-        i += 1
 
     output_location = os.path.join(output, "testOutput.apkg")
     genanki.Package(my_deck).write_to_file(output_location)
