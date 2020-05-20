@@ -2,6 +2,7 @@
 *.apkg
 *.md
 .venv
+*.pdf
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
